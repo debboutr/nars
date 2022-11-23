@@ -74,11 +74,11 @@ export default {
       }
       console.log(year)
       var sid = e.layer.feature.properties.SITE_ID;
-      let sitedata = await axios.get(`http://127.0.0.1:5000/${year}/point/${sid}`);
+      let sitedata = await axios.get(`http://narsapi.debbout.info/${year}/point/${sid}`);
       console.log(sitedata.data.properties)
       siteInfo.value = sitedata.data.properties;
 
-      let data = await axios.get(`http://127.0.0.1:5000/${year}/watersheds/${sid}`);
+      let data = await axios.get(`http://narsapi.debbout.info/${year}/watersheds/${sid}`);
       let dd = data.data
       let ws = leaflet.geoJSON(dd, {
         style: function () {
@@ -110,7 +110,7 @@ export default {
             fillOpacity: 0.8
         };
 
-        const data = await axios.get(`http://nars.debbout.info/${annum}/points/`);
+        const data = await axios.get(`http://narsapi.debbout.info/${annum}/points/`);
 				const result = data.data
         console.log(result);
         var poop = leaflet.geoJSON(result, {
