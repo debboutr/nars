@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web:
+    build: .
+    restart: always
+    image: nars:latest
+    container_name: nars
+    expose:
+      - "8069"
+    ports:
+      - "8069:80"
+    volumes:
+      - .:/app
+

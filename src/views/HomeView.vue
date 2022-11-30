@@ -72,7 +72,6 @@ export default {
       } else {
         year = "nrsa0809"
       }
-      console.log(year)
       var sid = e.layer.feature.properties.SITE_ID;
       let sitedata = await axios.get(`http://narsapi.debbout.info/${year}/point/${sid}`);
       console.log(sitedata.data.properties)
@@ -89,6 +88,8 @@ export default {
       mymap.fitBounds(bounds)
       var scrollDiv = document.getElementById("mapid").offsetTop;
       window.scrollTo({ top: scrollDiv, behavior: 'smooth'});
+			let area = leaflet.GeometryUtil.geodesicArea(ws.getLatLngs());
+			console.log("area", area)
       //let label = leaflet.marker(bounds.getCenter(), {
       //  icon: leaflet.divIcon({
       //    className: "bg-blue-800 rounded-full text-center justify-center",

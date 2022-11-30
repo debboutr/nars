@@ -14,6 +14,10 @@
       <span class="text-2xl">{{ siteInfo.SITE_ID }}</span>
 		</div>
 		<div class="flex flex-col">
+			<h3 class="text-xs mb-2 uppercase">comid</h3>
+			<span class="text-2xl">{{ siteInfo.COMID }}</span>
+		</div>
+		<div class="flex flex-col">
 			<h3 class="text-xs mb-2 uppercase">date collected</h3>
 			<span class="text-2xl">{{ siteInfo.DATE_COL.slice(0,10) }}</span>
 		</div>
@@ -25,7 +29,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 
 export default {
   props: ["siteInfo"],
