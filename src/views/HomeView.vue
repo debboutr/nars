@@ -17,7 +17,7 @@
 		<div id="mapid" class="h-full z-10"></div>
   </div>
   <div class="bg-hero-pattern bg-cover px-8 pb-8 pt-2 z-10">
-			<SiteInfo v-if="siteInfo" v-bind:siteInfo="siteInfo" />
+			<SiteInfo v-if="siteInfo" v-bind:siteInfo="siteInfo" :key="siteInfo.COMID" />
   </div>
 </template>
 
@@ -74,7 +74,6 @@ export default {
       }
       var sid = e.layer.feature.properties.SITE_ID;
       let sitedata = await axios.get(`http://narsapi.debbout.info/${year}/point/${sid}`);
-      console.log(sitedata.data.properties)
       siteInfo.value = sitedata.data.properties;
 
       let data = await axios.get(`http://narsapi.debbout.info/${year}/watersheds/${sid}`);
@@ -88,8 +87,7 @@ export default {
       mymap.fitBounds(bounds)
       var scrollDiv = document.getElementById("mapid").offsetTop;
       window.scrollTo({ top: scrollDiv, behavior: 'smooth'});
-			let area = leaflet.GeometryUtil.geodesicArea(ws.getLatLngs());
-			console.log("area", area)
+
       //let label = leaflet.marker(bounds.getCenter(), {
       //  icon: leaflet.divIcon({
       //    className: "bg-blue-800 rounded-full text-center justify-center",
@@ -113,16 +111,10 @@ export default {
 
         const data = await axios.get(`http://narsapi.debbout.info/${annum}/points/`);
 				const result = data.data
-        console.log(result);
         var poop = leaflet.geoJSON(result, {
           pointToLayer: function (feature, latlng) {
             return leaflet.circleMarker(latlng, geojsonMarkerOptions)
           },
-          //onEachFeature: function (feature, layer) {
-          //  drawWatershed(feature.properties.SITE_ID);
-          //  console.log(feature);
-          //  console.log(layer);
-          //},
         }).bindTooltip(function (layer) {
           return `<b>SITE_ID: ${layer.feature.properties.SITE_ID}</b>`
         }).addTo(mymap)
@@ -133,18 +125,7 @@ export default {
 				alert(err.message)
 			}
 		}
-
-		const getIpInfo = async () => {
-			try {
-        mymap.eachLayer(function (layer) {
-          console.log(layer);
-        })
-			}
-			catch(err) {
-				alert(err.message)
-			}
-		}
-		return { siteInfo, getPoints, getIpInfo };
+		return { siteInfo, getPoints };
 	},
 }
 </script>
