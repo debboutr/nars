@@ -2,13 +2,12 @@ version: '3'
 services:
   web:
     build:
+      context: .
       target: build-stage
     restart: always
     image: nars:latest
     container_name: nars
     command: npm run serve
-    expose:
-      - "8080"
     ports:
       - "8080:8080"
     volumes:
