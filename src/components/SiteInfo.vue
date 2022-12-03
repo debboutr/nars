@@ -10,6 +10,10 @@
 		px-8 pt-8
 		pb-12 rounded-md"
 		>
+		<NLCD v-if="nlcdInfo" :comid="siteInfo.COMID" :nlcdInfo="nlcdInfo.categories" />
+		<div class="break"></div>
+		<NLCD v-if="nlcdInfo04" :comid="siteInfo.COMID" :nlcdInfo="nlcdInfo04.categories" />
+		<!--
 		<div class="flex flex-col text-white">
 			<h3 class="text-xs mb-2 uppercase">site id</h3>
       <span class="text-2xl">{{ siteInfo.SITE_ID }}</span>
@@ -27,9 +31,7 @@
 			<span class="text-2xl">{{ siteInfo.VISIT_NO }}</span>
 		</div>
 		<div class="break"></div>
-		<NLCD v-if="nlcdInfo" :comid="siteInfo.COMID" :nlcdInfo="nlcdInfo.categories" />
-		<div class="break"></div>
-		<NLCD v-if="nlcdInfo04" :comid="siteInfo.COMID" :nlcdInfo="nlcdInfo04.categories" />
+		-->
 	</div>
 </template>
 

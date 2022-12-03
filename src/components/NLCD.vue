@@ -1,9 +1,14 @@
 <template>
 	<svg class="chart" width="100%" height="40">
+		<rect width="1px" x="25%" fill="white" height="32"></rect>
+		<rect width="1px" x="50%" fill="white" height="32"></rect>
+		<rect width="1px" x="75%" fill="white" height="32"></rect>
 		<template v-for="cc in formatData" :key="cc.category" >
 			<rect 
 				v-bind="getAttrs(cc)"
-				height="22">
+				height="22"
+				y="5"
+				>
 					<title>
 						{{ cc.category }} ({{ cc.width }}%)
 					</title>
@@ -64,3 +69,13 @@ export default {
 	},
 }
 </script>
+<style>
+	@keyframes slide {
+		from {width: 0%;}
+		to {width: 100%;}
+	}
+	.chart {
+		animation-name: slide;
+		animation-duration: 3s;
+	}
+</style>
