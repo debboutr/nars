@@ -14,27 +14,29 @@
 		</div>
 		<div id="mapid" class="h-full z-10">
 			<div class="box">
-				<h3 class="text-center text-3xl text-slate-200/75 pb-4">Survey Results</h3>
+				<h3 class="text-center text-3xl text-slate-200/75 pb-4">Survey Years</h3>
 				<div class="nav yr1" @click="getPoints('nrsa0405','#0891B2','#67E8F9')">04/05</div>
 				<div class="nav yr2" @click="getPoints('nrsa0809','#4D7C0F','#BEF264')">08/09</div>
 				<div class="nav yr3" @click="getPoints('nrsa1314','#EAB308','#FEF08A')">13/14</div>
 			</div>
 		</div>
   </div>
-  <div class="bg-hero-pattern bg-cover hold px-8 pb-8 pt-2 z-10">
+	<BackToTop />
+  <div class="bg-hero-pattern bg-cover hold px-8 pb-8 pt-0 z-10">
 			<SiteInfo v-if="siteInfo" v-bind:siteInfo="siteInfo" :key="siteInfo.COMID" />
   </div>
 </template>
 
 <script>
 import SiteInfo from "../components/SiteInfo.vue"
+import BackToTop from "../components/BackToTop.vue"
 import leaflet from "leaflet"
 import { onMounted, ref } from "vue"
 import axios from "axios"
 
 export default {
   name: 'HomeView',
-  components: { SiteInfo },
+  components: { SiteInfo, BackToTop },
 	setup() {
 		let mymap;
 		const siteInfo = ref(null);
@@ -52,6 +54,8 @@ export default {
 					attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>',
 					accessToken: "pk.eyJ1IjoiZGViYm9pdXRyIiwiYSI6IjhlMTk5YzlhZDBiODQ5MWE5NDEzMzE1MjI0OTU4OWJjIn0.jS8URjY-9OvjAv6aTn9I0w",
 			}).addTo(mymap);
+
+      mymap.attributionControl.setPosition('bottomleft');
 
 			const navs = document.querySelectorAll(".nav")
 
@@ -246,7 +250,7 @@ export default {
     box-shadow: none;
   }
   .hold {
-    min-height: 200px;
+    min-height: 400px;
 	}
   .box {
     position: absolute;
@@ -279,6 +283,10 @@ export default {
   }
   .yr3 {
 		background-color: #EAB308;
+  }
+  .leaflet-control-attribution {
+    display: hidden;
+    opacity: 0%;
   }
  </style>
  
