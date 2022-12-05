@@ -4,22 +4,12 @@
 			<div class="w-full max-w-screen-sm">
 				<h1 class="text-white text-center text-3xl pb-4">National Aquatic Resource Survey Results</h1>
         <div class="flex justify-center px-4">
-		<!--
-          <button class="snow bg-cyan-600" @click="getPoints('nrsa0405','#0891B2','#67E8F9')">NRSA 2004-05</button>
-          <button class="snow bg-lime-700" @click="getPoints('nrsa0809','#4D7C0F','#BEF264')">NRSA 2008-09</button>
-          <button class="snow bg-yellow-500" @click="getPoints('nrsa1314','#EAB308','#FEF08A')">NRSA 2013-14</button>
-		-->
         </div>
 			</div>
 		</div>
 		<div id="mapid" class="h-full z-10">
-			<div class="box">
-				<h3 class="text-center text-3xl text-slate-200/75 pb-4">Survey Years</h3>
-				<div class="nav yr1" @click="getPoints('nrsa0405','#0891B2','#67E8F9')">04/05</div>
-				<div class="nav yr2" @click="getPoints('nrsa0809','#4D7C0F','#BEF264')">08/09</div>
-				<div class="nav yr3" @click="getPoints('nrsa1314','#EAB308','#FEF08A')">13/14</div>
-			</div>
-		</div>
+       <MapNav @get-points="getPoints" />
+    </div>
   </div>
 	<BackToTop />
   <div class="bg-hero-pattern bg-cover hold px-8 pb-8 pt-0 z-10">
@@ -30,18 +20,18 @@
 <script>
 import SiteInfo from "../components/SiteInfo.vue"
 import BackToTop from "../components/BackToTop.vue"
+import MapNav from "../components/MapNav.vue"
 import leaflet from "leaflet"
 import { onMounted, ref } from "vue"
 import axios from "axios"
 
 export default {
   name: 'HomeView',
-  components: { SiteInfo, BackToTop },
+  components: { SiteInfo, BackToTop, MapNav },
 	setup() {
 		let mymap;
 		const siteInfo = ref(null);
 
-		//const years = ["a","b"]
 		onMounted(() => {
 
 			mymap = leaflet.map("mapid").setView([39.828175, -98.5795], 4);
@@ -56,12 +46,6 @@ export default {
 			}).addTo(mymap);
 
       mymap.attributionControl.setPosition('bottomleft');
-
-			const navs = document.querySelectorAll(".nav")
-
-			for (const nav of navs) {
-				leaflet.DomEvent.disableClickPropagation(nav)
-			}
 
 			function wricky (e) {
 				let curZoom = mymap.getZoom()
@@ -78,8 +62,7 @@ export default {
 				dot.addTo(mymap)
 				dot.bindPopup(
 					() => {
-							return `
-
+            return `
 							<div class="container"
 								data-lat="${e.latlng.lat}"
 								data-lng="${e.latlng.lng}">
@@ -252,38 +235,6 @@ export default {
   .hold {
     min-height: 400px;
 	}
-  .box {
-    position: absolute;
-		top: 100px;
-		max-width: 100px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: .5em;
-		margin: 1em;
-    background-color:rgba(255,0,0,0);
-		z-index: 999;
-	}
-  .nav {
-    height: 70px;
-		width: 70px;
-		margin-bottom: 1.5em;
-    border-radius: 50%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 1.5em;
-  }
-  .yr1 {
-		background-color: #0891B2;
-  }
-  .yr2 {
-		background-color: #4D7C0F;
-  }
-  .yr3 {
-		background-color: #EAB308;
-  }
   .leaflet-control-attribution {
     display: hidden;
     opacity: 0%;
