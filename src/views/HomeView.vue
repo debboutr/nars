@@ -21,7 +21,10 @@
 import SiteInfo from "../components/SiteInfo.vue"
 import BackToTop from "../components/BackToTop.vue"
 import MapNav from "../components/MapNav.vue"
-import leaflet from "leaflet"
+import L from "leaflet"
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "leaflet.markercluster/dist/leaflet.markercluster-src.js";
 import { onMounted, ref } from "vue"
 import axios from "axios"
 
@@ -34,15 +37,14 @@ export default {
 
 		onMounted(() => {
 
-			mymap = leaflet.map("mapid").setView([39.828175, -98.5795], 4);
+			mymap = L.map("mapid").setView([39.828175, -98.5795], 4);
 
-			leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGViYm9pdXRyIiwiYSI6IjhlMTk5YzlhZDBiODQ5MWE5NDEzMzE1MjI0OTU4OWJjIn0.jS8URjY-9OvjAv6aTn9I0w', {
+      L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${process.env.VUE_APP_MB_TOKEN}`, {
 					maxZoom: 18,
 					id: "mapbox/satellite-v9",
 					tileSize: 512,
 					zoomOffset: -1,
 					attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>',
-					accessToken: "pk.eyJ1IjoiZGViYm9pdXRyIiwiYSI6IjhlMTk5YzlhZDBiODQ5MWE5NDEzMzE1MjI0OTU4OWJjIn0.jS8URjY-9OvjAv6aTn9I0w",
 			}).addTo(mymap);
 
       mymap.attributionControl.setPosition('bottomleft');
@@ -50,7 +52,7 @@ export default {
 			function wricky (e) {
 				let curZoom = mymap.getZoom()
 				mymap.flyTo(e.latlng, curZoom + 1)
-				let dot = leaflet.circleMarker([e.latlng.lat, e.latlng.lng], {
+				let dot = L.circleMarker([e.latlng.lat, e.latlng.lng], {
 						radius: 5,
 						fillColor: `#E11D48`,
 						color: `#FED7AA`,
@@ -92,9 +94,9 @@ export default {
 					nearest/${e.path[1].dataset.lat}/${e.path[1].dataset.lng}`)
 					.then((response) => {
 						let data = response.data;
-						let gobs = leaflet.geoJSON(data, {
+						let gobs = L.geoJSON(data, {
 							pointToLayer: function (feature, latlng) {
-								return leaflet.circleMarker(latlng, {
+								return L.circleMarker(latlng, {
 									fillColor: `${years[year].fill}`,
 									color: `${years[year].color}`,
 									radius: 24,
@@ -107,7 +109,7 @@ export default {
 								layer.bindTooltip(feature.properties.SITE_ID, {
 									closeButton: false,
 									className: "text",
-									offset: leaflet.point(0, -20)});
+									offset: L.point(0, -20)});
 							}
 						})
 						gobs.addTo(mymap)
@@ -153,11 +155,11 @@ export default {
 
       let data = await axios.get(`http://narsapi.debbout.info/${year}/watersheds/${sid}`);
       let dd = data.data
-      let ws = leaflet.geoJSON(dd, {
+      let ws = L.geoJSON(dd, {
         style: function () {
-                return {color: "red"};
-            }
-      }).addTo(mymap)
+            return {color: "red"};
+          }
+        }).addTo(mymap)
       let bounds = ws.getBounds()
       mymap.fitBounds(bounds)
       var scrollDiv = document.getElementById("mapid").offsetTop;
@@ -177,9 +179,9 @@ export default {
 
         const data = await axios.get(`http://narsapi.debbout.info/${annum}/points/`);
 				const result = data.data
-        var poop = leaflet.geoJSON(result, {
+        var poop = L.geoJSON(result, {
           pointToLayer: function (feature, latlng) {
-            return leaflet.circleMarker(latlng, geojsonMarkerOptions)
+            return L.circleMarker(latlng, geojsonMarkerOptions)
           },
         }).bindTooltip(function (layer) {
           return `<b>SITE_ID: ${layer.feature.properties.SITE_ID}</b>`
