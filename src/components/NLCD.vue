@@ -20,26 +20,26 @@
 <script>
 
 export default {
-  props: ["comid", "nlcdInfo"],
+  props: ["nlcdInfo"],
 	data: function () {
 		return {
 			categories: {
-			"PctOwWs": "#5475A8", // Open water
-			"PctIceWs": "#ffffff", // Perennial Ice/Snow,
-			"PctUrbOpWs": "#E8D1D1", // Developed, Open space
-			"PctUrbLoWs": "#E29E8C", // Developed, Low intensity
-			"PctUrbMdWs": "#ff0000", // Developed, Medium intensity
-			"PctUrbHiWs": "#B50000", // Developed, High intensity
-			"PctBlWs": "#D2CDC0", // Barren Land
-			"PctDecidWs": "#85C77E", // Deciduous Forest
-			"PctConifWs": "#38814E", // Evergreen Forest
-			"PctMxFstWs": "#D4E7B0", // Mixed Forest
-			"PctShrbWs": "#DCCA8F", // Shrub/Scrub
-			"PctGrsWs": "#FDE9AA", // Grassland/Herbaceous
-			"PctHayWs": "#FBF65D", // Pasture/Hay
-			"PctCropWs": "#CA9146", // Cultivated Crops
-			"PctWdWetWs": "#C8E6F8", // Woody Wetlands
-			"PctHbWetWs": "#64B3D5" // Emergent Herbaceous Wetlands
+        "PctOwWs": {color: "#5475A8", name: "Open water"},
+        "PctIceWs": {color: "#ffffff", name: "Perennial Ice/Snow"},
+        "PctUrbOpWs": {color: "#E8D1D1", name: "Developed, Open space"},
+        "PctUrbLoWs": {color: "#E29E8C", name: "Developed, Low intensity"},
+        "PctUrbMdWs": {color: "#ff0000", name: "Developed, Medium intensity"},
+        "PctUrbHiWs": {color: "#B50000", name: "Developed, High intensity"},
+        "PctBlWs": {color: "#D2CDC0", name: "Barren Land"},
+        "PctDecidWs": {color: "#85C77E", name: "Deciduous Forest"},
+        "PctConifWs": {color: "#38814E", name: "Evergreen Forest"},
+        "PctMxFstWs": {color: "#D4E7B0", name: "Mixed Forest"},
+        "PctShrbWs": {color: "#DCCA8F", name: "Shrub/Scrub"},
+        "PctGrsWs": {color: "#FDE9AA", name: "Grassland/Herbaceous"},
+        "PctHayWs": {color: "#FBF65D", name: "Pasture/Hay"},
+        "PctCropWs": {color: "#CA9146", name: "Cultivated Crops"},
+        "PctWdWetWs": {color: "#C8E6F8", name: "Woody Wetlands"},
+        "PctHbWetWs": {color: "#64B3D5", name: "Emergent Herbaceous Wetlands"}
 			},
 		}
 	},
@@ -48,7 +48,7 @@ export default {
 			return { 
 			"width": `${c.width}%`,
 			"x": `${c.start}%`,
-			"fill": this.categories[c.category]
+			"fill": this.categories[c.category]["color"]
 			}
 		}
 	},
@@ -57,12 +57,13 @@ export default {
 			let start = 0
 			let hold = []
 			for (const el in props.nlcdInfo) {
+        let width = props.nlcdInfo[el]
 				hold.push({
 					"category": el,
 					"start": start.toFixed(2),
-					"width": props.nlcdInfo[el]
+					"width": width
 				})
-				start += props.nlcdInfo[el]
+        start += width
 			}
 			return hold
 		}

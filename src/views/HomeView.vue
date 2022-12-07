@@ -33,7 +33,8 @@ export default {
   components: { SiteInfo, BackToTop, MapNav },
 	setup() {
 		let mymap;
-		const siteInfo = ref(null);
+    const allInfo = {}
+		const siteInfo = ref(null)
 
 		onMounted(() => {
 
@@ -90,7 +91,7 @@ export default {
 
 				mymap.closePopup()
 				let year = e.target.dataset.year
-				axios.get(`http://narsapi.debbout.info/${year}/
+        axios.get(`${process.env.VUE_APP_API_URL}/${year}/
 					nearest/${e.path[1].dataset.lat}/${e.path[1].dataset.lng}`)
 					.then((response) => {
 						let data = response.data;
@@ -150,16 +151,18 @@ export default {
         year = "nrsa0809"
       }
       var sid = e.layer.feature.properties.SITE_ID;
-      let sitedata = await axios.get(`http://narsapi.debbout.info/${year}/point/${sid}`);
-      siteInfo.value = sitedata.data.properties;
+      let sitedata = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/point/${sid}`);
+      siteInfo.value = sitedata.data.properties
+      allInfo[`${sid}`] = sitedata.data.properties
 
-      let data = await axios.get(`http://narsapi.debbout.info/${year}/watersheds/${sid}`);
+      let data = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/watersheds/${sid}`);
       let dd = data.data
       let ws = L.geoJSON(dd, {
         style: function () {
             return {color: "red"};
           }
         }).addTo(mymap)
+      ws.on("click", () => { siteInfo.value = allInfo[sid] })
       let bounds = ws.getBounds()
       mymap.fitBounds(bounds)
       var scrollDiv = document.getElementById("mapid").offsetTop;
@@ -167,31 +170,45 @@ export default {
     }
 
 		const getPoints = async (annum, color, fill) => {
-			try {
-        var geojsonMarkerOptions = {
-            radius: 5,
-            fillColor: `${fill}`,
-            color: `${color}`,
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        };
+      mymap.off('click')
+      var geojsonMarkerOptions = {
+          radius: 5,
+          fillColor: `${fill}`,
+          color: `${color}`,
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+      };
 
-        const data = await axios.get(`http://narsapi.debbout.info/${annum}/points/`);
-				const result = data.data
-        var poop = L.geoJSON(result, {
-          pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions)
-          },
-        }).bindTooltip(function (layer) {
-          return `<b>SITE_ID: ${layer.feature.properties.SITE_ID}</b>`
-        }).addTo(mymap)
-        poop.on('click', drawWatershed);
-        mymap.fitBounds(poop.getBounds())
-			}
-			catch(err) {
-				alert(err.message)
-			}
+      let cg = L.markerClusterGroup()
+      const data = await axios.get(`${process.env.VUE_APP_API_URL}/${annum}/points/`)
+        .then((response) => {
+          return response.data
+        })
+//
+//      data.features.forEach((feat) => {
+//        let coords = feat.geometry.coordinates
+//        const m = L.circleMarker([coords[1], coords[0]], geojsonMarkerOptions)
+//        m.bindTooltip(`<b>SITE_ID: ${feat.properties.SITE_ID}</b>`)
+//        m.on("click", drawWatershed)
+//        cg.addLayer(m)
+//
+//      })
+      var poop = L.geoJSON(data, {
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, geojsonMarkerOptions)
+        },
+        onEachFeature: function (feature, layer) {
+          layer.bindTooltip(`<b>SITE_ID: ${feature.properties.SITE_ID}</b>`, {
+            closeButton: false,
+            className: "text",
+            offset: L.point(0, -20)});
+        }
+      })
+      poop.on('click', drawWatershed);
+      cg.addLayer(poop)
+      mymap.addLayer(cg)
+      mymap.fitBounds(poop.getBounds())
 		}
 		return { siteInfo, getPoints };
 	},
