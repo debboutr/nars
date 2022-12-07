@@ -1,11 +1,12 @@
 <template>
   <div class="flex flex-col h-screen max-h-screen">
-		<div class="z-20 flex justify-center relative bg-hero-pattern bg-cover px-2 pt-8 pb-8">
-			<div class="w-full max-w-screen-sm">
-				<h1 class="text-white text-center text-3xl pb-4">National Aquatic Resource Survey Results</h1>
-        <div class="flex justify-center px-4">
-        </div>
-			</div>
+		<div class="z-20 flex justify-left relative bg-hero-pattern bg-cover px-2 pt-4 pb-4">
+      <input type="text" placeholder="Search for SITE_ID" class="mx-12 h-12 border-2 border-red-500" />
+      <div>boo</div>
+      <div>boo</div>
+      <div>boo</div>
+      <div>boo</div>
+      <div>boo</div>
 		</div>
 		<div id="mapid" class="h-full z-10">
        <MapNav @get-points="getPoints" />
@@ -13,24 +14,22 @@
   </div>
 	<BackToTop />
   <div class="bg-hero-pattern bg-cover hold px-8 pb-8 pt-0 z-10">
-			<SiteInfo v-if="siteInfo" v-bind:siteInfo="siteInfo" :key="siteInfo.COMID" />
+			<WatershedCard  v-if="siteInfo" v-bind:siteInfo="siteInfo" :key="siteInfo.COMID" />
   </div>
 </template>
 
 <script>
-import SiteInfo from "../components/SiteInfo.vue"
-import BackToTop from "../components/BackToTop.vue"
-import MapNav from "../components/MapNav.vue"
+import MapNav from "@/components/MapNav.vue"
+import BackToTop from "@/components/BackToTop.vue"
+// card below will be made with the store.watersheds object
+import WatershedCard from "@/components/WatershedCard.vue"
 import L from "leaflet"
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import "leaflet.markercluster/dist/leaflet.markercluster-src.js";
 import { onMounted, ref } from "vue"
 import axios from "axios"
 
 export default {
   name: 'HomeView',
-  components: { SiteInfo, BackToTop, MapNav },
+  components: { WatershedCard , BackToTop, MapNav },
 	setup() {
 		let mymap;
     const allInfo = {}
@@ -90,6 +89,7 @@ export default {
 			function flyToNorway(e) {
 
 				mymap.closePopup()
+        // i put the year in a data- tag | move to store
 				let year = e.target.dataset.year
         axios.get(`${process.env.VUE_APP_API_URL}/${year}/
 					nearest/${e.path[1].dataset.lat}/${e.path[1].dataset.lng}`)
@@ -143,6 +143,7 @@ export default {
 
     const drawWatershed = async (e) => {
       var year = parseInt(e.layer.feature.properties.YEAR)
+      // MAke this a mutation and a property for the store | needed
       if (year >= 2012) {
         year = "nrsa1314"
       } else if (year <= 2005) {
@@ -151,9 +152,10 @@ export default {
         year = "nrsa0809"
       }
       var sid = e.layer.feature.properties.SITE_ID;
-      let sitedata = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/point/${sid}`);
-      siteInfo.value = sitedata.data.properties
-      allInfo[`${sid}`] = sitedata.data.properties
+      //let sitedata = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/point/${sid}`);
+      siteInfo.value = e.layer.feature.properties
+      // below is example of mutation needed for state
+      allInfo[`${sid}`] = e.layer.feature.properties
 
       let data = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/watersheds/${sid}`);
       let dd = data.data
@@ -162,6 +164,11 @@ export default {
             return {color: "red"};
           }
         }).addTo(mymap)
+      // below is what makses the cards flip the data they contai right meow
+      // I think the whole funtion can be expressed in store ?mutation?
+      // needs to return a function
+      // in STORE function returned
+      // this function below will just call a mutation that returns th obj[sid]
       ws.on("click", () => { siteInfo.value = allInfo[sid] })
       let bounds = ws.getBounds()
       mymap.fitBounds(bounds)
@@ -259,4 +266,3 @@ export default {
     opacity: 0%;
   }
  </style>
- 

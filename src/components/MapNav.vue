@@ -27,7 +27,7 @@ export default {
 	setup() {
     const show = ref(false)
 		onMounted(() => {
-      console.log("hello")
+      //console.log("hello")
 			const box = document.querySelector(".box")
       leaflet.DomEvent.disableClickPropagation(box)
     })
