@@ -1,19 +1,21 @@
 <template>
-  <div class="flex flex-col h-screen max-h-screen">
-		<div class="z-20 flex justify-left relative bg-hero-pattern bg-cover px-2 pt-4 pb-4">
+  <div class="flex flex-col items-center bg-hero-pattern bg-repeat-y">
+		<div class="w-full flex justify-left px-2 pt-4 pb-4">
       <input type="text" placeholder="Search for SITE_ID" class="mx-12 h-12 border-2 border-red-500" />
       <div>AAAAA  YYYYY</div>
 		</div>
-		<div id="mapid" class="h-full z-10">
+		<div id="mapid" class="h-96 w-5/6">
        <map-nav @get-points="getPoints" />
     </div>
+    <div v-if="watersheds.length" class="h-full w-full px-8 pt-2">
+      <transition-group name="cards" tag="div">
+        <watershed-card v-for="info in watersheds" :key="info.comid" :siteInfo="info" />
+      </transition-group>
+    </div>
+    <div class="h-96">
+    </div>
   </div>
-  <div v-if="watersheds.length" class="h-screen bg-hero-pattern bg-cover px-8 pt-2 z-10">
-    <transition-group name="cards" tag="div">
-      <watershed-card v-for="info in watersheds" :key="info.comid" :siteInfo="info" />
-    </transition-group>
-  </div>
-	<BackToTop />
+  <BackToTop />
 </template>
 
 <script setup>

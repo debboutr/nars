@@ -1,10 +1,10 @@
 <template>
 	<div class="bg-gray-800 mt-2 p-2 rounded-md">
-    <div class="flex justify-between pb-2 content-center">
-      <div class="text-2xl text-gray-200">
+    <div class="flex justify-between pb-2 items-center content-center">
+      <div class="text-xl text-gray-200 mx-4">
         SITE ID: {{ siteInfo.info.SITE_ID }}
       </div>
-      <button class="bg-gray-200 rounded-full p-2 mx-2" @click="showInfo = !showInfo">i</button>
+      <button class="bg-gray-200 rounded p-2 mx-2" @click="showInfo = !showInfo">i</button>
     </div>
     <Transition name="show">
       <div class="bg-gray-600 rounded pb-4" v-show="showInfo">
