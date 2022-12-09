@@ -1,12 +1,5 @@
 <template>
-  <div class="
-		flex
-		flex-wrap
-		flex-col
-		sm:flex-row
-		gap-y-4
-		gap-x-12
-      ">
+  <div class="flex flex-wrap flex-col sm:flex-row gap-y-4 gap-x-12">
     <div class="flex flex-col text-white">
       <h3 class="text-xs mb-2 uppercase">site id</h3>
       <span class="text-2xl">{{ siteInfo.SITE_ID }}</span>

@@ -1,37 +1,30 @@
 <template>
-	<div v-if="siteInfo.COMID" class="
-		bg-gray-800
-		px-8 pt-8
-		pb-12 rounded-md
-    "
-		>
+	<div class="bg-gray-800 mt-2 px-8 pt-8 rounded-md">
+    <h1>{{ siteInfo.info.SITE_ID }}</h1>
+    <h1>{{ siteInfo.info.COMID }}</h1>
+    <Transition>
+      <button v-if="siteInfo.info.YEAR === '2004'">Edit</button>
+      <button v-else>Save</button>
+    </Transition>
+    <!--
     <div class="champ pb-4">
-    <NLCD :comid="siteInfo.COMID" />
+      <NLCD :comid="siteInfo.COMID" :comparableYears="checkRef" :squareList="checkRef2" />
     </div>
     <site-info :siteInfo="siteInfo" />
+    -->
 	</div>
 </template>
 
-<script>
-import NLCD from "@/components/NLCD.vue"
-import SiteInfo from "@/components/SiteInfo.vue"
+<script setup>
+// eslint-disable-next-line no-undef
+defineProps({
+  siteInfo: Object,
+})
 
-export default {
-  props: ["siteInfo"],
-  components: { 
-    NLCD, 
-    SiteInfo 
-  },
-  setup() {}
-}
 </script>
 
 <style>
   .champ {
     min-height: 100px;
   }
-	.break {
-		flex-basis: 100%;
-		height: 0;
-	}
 </style>
