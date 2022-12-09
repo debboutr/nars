@@ -5,12 +5,12 @@
       <div>AAAAA  YYYYY</div>
 		</div>
 		<div id="mapid" class="h-full z-10">
-       <MapNav @get-points="getPoints" />
+       <map-nav @get-points="getPoints" />
     </div>
   </div>
-  <div v-if="watersheds.length" class="bg-hero-pattern bg-cover px-8 pt-2 z-10">
+  <div v-if="watersheds.length" class="h-screen bg-hero-pattern bg-cover px-8 pt-2 z-10">
     <transition-group name="cards" tag="div">
-      <WatershedCard v-for="info in watersheds" :key="info.comid" :siteInfo="info" />
+      <watershed-card v-for="info in watersheds" :key="info.comid" :siteInfo="info" />
     </transition-group>
   </div>
 	<BackToTop />
@@ -149,7 +149,7 @@ const drawWatershed = async (e) => {
   axios.get(`${process.env.VUE_APP_API_URL}/nlcd/compare/${comid}/`)
     .then((response) => {
       let comp = response.data.comparable
-      let square = response.data.squareList
+      let square = response.data.square_list
       watersheds.value.unshift({
         "comid": comid,
         "info": featureData,

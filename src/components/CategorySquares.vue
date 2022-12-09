@@ -2,7 +2,7 @@
   <div v-if="squareList" class="flex justify-between flex-wrap pb-2">
     <template v-for="(square, index) in squareList" :key="index">
       <div @click="speak" class="nub w-10 h-10 mx-2 mb-4" :style="{ 'background-color': catNames[square]['color'] }">
-        <span id="fade" class="px-4 tooltiptext">{{ catNames[square]['name'] }}</span>
+        <span id="fade" class="tooltiptext">{{ catNames[square]['name'] }}</span>
       </div>
     </template>
   </div>
@@ -34,7 +34,7 @@ export default {
   .tooltiptext {
     position: relative;
     z-index: 1;
-    top: -40px;
+    top: 40px;
     left: -50%;
     z-index: 600;
     width: 100%;

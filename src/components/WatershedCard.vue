@@ -1,30 +1,45 @@
 <template>
-	<div class="bg-gray-800 mt-2 px-8 pt-8 rounded-md">
-    <h1>{{ siteInfo.info.SITE_ID }}</h1>
-    <h1>{{ siteInfo.info.COMID }}</h1>
-    <Transition>
-      <button v-if="siteInfo.info.YEAR === '2004'">Edit</button>
-      <button v-else>Save</button>
-    </Transition>
-    <!--
-    <div class="champ pb-4">
-      <NLCD :comid="siteInfo.COMID" :comparableYears="checkRef" :squareList="checkRef2" />
+	<div class="bg-gray-800 mt-2 p-2 rounded-md">
+    <div class="flex justify-between pb-2 content-center">
+      <div class="text-2xl text-gray-200">
+        SITE ID: {{ siteInfo.info.SITE_ID }}
+      </div>
+      <button class="bg-gray-200 rounded-full p-2 mx-2" @click="showInfo = !showInfo">i</button>
     </div>
-    <site-info :siteInfo="siteInfo" />
+    <Transition name="show">
+      <div class="bg-gray-600 rounded pb-4" v-show="showInfo">
+        <nlcd-data :comid="siteInfo.info.COMID" :comparableYears="siteInfo.comparable" :squareList="siteInfo.squareList" />
+        <site-info :siteInfo="siteInfo.info" />
+      </div>
+    </Transition>
+      <!--
     -->
 	</div>
 </template>
 
 <script setup>
+import { ref } from "vue"
+import NlcdData from "@/components/NlcdData.vue"
+import SiteInfo from "@/components/SiteInfo.vue"
 // eslint-disable-next-line no-undef
 defineProps({
   siteInfo: Object,
 })
+const showInfo = ref(true)
 
 </script>
 
 <style>
-  .champ {
-    min-height: 100px;
-  }
+.show-enter-active {
+  transition: all 0.8s ease-out;
+}
+
+.show-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.show-enter-from,
+.show-leave-to {
+  opacity: 0;
+}
 </style>

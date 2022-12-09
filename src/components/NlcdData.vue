@@ -1,10 +1,10 @@
 <template>
-  <category-squares :squareList="props.squareList" :catNames="categories" />
+  <category-squares :squareList="squareList" :catNames="categories" />
   <!--
   BELOW WILL BE A COMPONENT OF IT'S OWN -- comparableYears data to be put in store
   reportedCategories will bee -> reported and then -> reported.categories | reported.year
 --> 
-	<svg class="chart" width="100%" height="50" v-for="(reported, index) in props.comparableYears" :key="index">
+	<svg class="chart" width="100%" height="50" v-for="(reported, index) in comparableYears" :key="index">
 		<rect width="1px" x="25%" fill="white" height="32"></rect>
 		<rect width="1px" x="50%" fill="white" height="32"></rect>
 		<rect width="1px" x="75%" fill="white" height="32"></rect>
@@ -45,7 +45,7 @@ const categories = {
 }
 
 // eslint-disable-next-line no-undef
-const props = defineProps({
+defineProps({
   comid: String,
   comparableYears: Array,
   squareList: Object

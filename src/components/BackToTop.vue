@@ -52,7 +52,7 @@ export default {
 <style>
   .back-to-top {
     position: fixed;
-    right: 1rem;
+    left: 1rem;
     bottom: 1rem;
     border-radius: 100%;
     background: #141c38;
