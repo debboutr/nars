@@ -4,13 +4,13 @@
   <!--
   BELOW WILL BE A COMPONENT OF IT'S OWN -- comparableYears data to be put in store
   reportedCategories will bee -> reported and then -> reported.categories | reported.year
---> 
+-->
 	<svg class="chart" width="100%" height="50" v-for="(reported, index) in comparableYears" :key="index">
 		<rect width="1px" x="25%" fill="white" height="32"></rect>
 		<rect width="1px" x="50%" fill="white" height="32"></rect>
 		<rect width="1px" x="75%" fill="white" height="32"></rect>
 		<template v-for="rc in reported.categories" :key="rc.category" >
-			<rect 
+			<rect
 				v-bind="makeRectAttrs(rc)"
 				height="40"
 				y="5"
@@ -24,9 +24,10 @@
 </template>
 
 <script setup>
+import { ref } from "vue"
 import CategorySquares from "@/components/CategorySquares"
 
-const categories = {
+const categories = ref({
   "PctOwWs": {color: "#5475A8", name: "Open water"},
   "PctIceWs": {color: "#ffffff", name: "Perennial Ice/Snow"},
   "PctUrbOpWs": {color: "#E8D1D1", name: "Developed, Open space"},
@@ -43,7 +44,7 @@ const categories = {
   "PctCropWs": {color: "#CA9146", name: "Cultivated Crops"},
   "PctWdWetWs": {color: "#C8E6F8", name: "Woody Wetlands"},
   "PctHbWetWs": {color: "#64B3D5", name: "Emergent Herbaceous Wetlands"}
-}
+})
 
 // eslint-disable-next-line no-undef
 defineProps({
@@ -52,7 +53,7 @@ defineProps({
   squareList: Object
 })
 const makeRectAttrs = function(c) {
-  return { 
+  return {
   "width": `${c.width}%`,
   "x": `${c.start}%`,
   "fill": this.categories[c.category]["color"]
