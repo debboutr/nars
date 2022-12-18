@@ -24,10 +24,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+// import { ref } from "vue"
 import CategorySquares from "@/components/CategorySquares"
 
-const categories = ref({
+const categories = {
   "PctOwWs": {color: "#5475A8", name: "Open water"},
   "PctIceWs": {color: "#ffffff", name: "Perennial Ice/Snow"},
   "PctUrbOpWs": {color: "#E8D1D1", name: "Developed, Open space"},
@@ -44,7 +44,7 @@ const categories = ref({
   "PctCropWs": {color: "#CA9146", name: "Cultivated Crops"},
   "PctWdWetWs": {color: "#C8E6F8", name: "Woody Wetlands"},
   "PctHbWetWs": {color: "#64B3D5", name: "Emergent Herbaceous Wetlands"}
-})
+}
 
 // eslint-disable-next-line no-undef
 defineProps({
@@ -53,7 +53,7 @@ defineProps({
   squareList: Object
 })
 
-const makeRectAttrs = function(c) {
+function makeRectAttrs(c) {
     //console.log(categories)
     //console.log(c.category)
     return {
