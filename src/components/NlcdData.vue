@@ -52,12 +52,15 @@ defineProps({
   comparableYears: Array,
   squareList: Object
 })
+
 const makeRectAttrs = function(c) {
-  return {
-  "width": `${c.width}%`,
-  "x": `${c.start}%`,
-  "fill": this.categories[c.category]["color"]
-  }
+    //console.log(categories)
+    //console.log(c.category)
+    return {
+        "width": `${c.width}%`,
+        "x": `${c.start}%`,
+        "fill": this.categories[c.category].color
+    }
 }
 </script>
 
