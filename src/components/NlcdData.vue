@@ -1,5 +1,6 @@
 <template>
-  <category-squares :squareList="squareList" :catNames="categories" />
+  <h1 class="text-center">NLCD Categories</h1>
+  <category-squares :comid="comid" :squareList="squareList" :catNames="categories" />
   <!--
   BELOW WILL BE A COMPONENT OF IT'S OWN -- comparableYears data to be put in store
   reportedCategories will bee -> reported and then -> reported.categories | reported.year

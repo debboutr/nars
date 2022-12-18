@@ -1,15 +1,20 @@
 <template>
   <div class="flex flex-col items-center bg-hero-pattern bg-repeat-y">
-		<div class="w-full flex justify-left px-2 pt-4 pb-4">
-      <input type="text" placeholder="Search for SITE_ID" class="mx-12 h-12 border-2 border-red-500" />
-      <div>AAAAA  YYYYY</div>
+		<div class="w-full flex justify-left px-2 pt-4 pb-4 text-xl">
+      <input type="text" placeholder="Search for SITE_ID" class="mx-12 h-12 border-2 border-gray-500 rounded-full" />
+      <h3>National Aquatic Resource Survey</h3>
 		</div>
-		<div id="mapid" class="h-96 w-5/6">
+		<div id="mapid" class="map-height w-5/6">
        <map-nav @get-points="getPoints" />
     </div>
     <div v-if="watersheds.length" class="h-full w-full px-8 pt-2">
       <transition-group name="cards" tag="div">
-        <watershed-card v-for="info in watersheds" :key="info.comid" :siteInfo="info" />
+        <watershed-card 
+          v-for="info in watersheds"
+          :key="info.comid"
+          :siteInfo="info"
+          @zoom-bounds="zoomBounds"
+          @remove-watershed="removeWatershed" />
       </transition-group>
     </div>
     <div class="h-96">
@@ -143,34 +148,49 @@ const moveToFirst = (comid) => {
 
 const drawWatershed = async (e) => {
   const featureData = e.layer.feature.properties
-  let yr = parseInt(featureData.YEAR)
-  const year = yr >= 2012 ? "nrsa1314" : yr <= 2005 ? "nrsa0405" : "nrsa0809"
-  var sid = featureData.SITE_ID;
-  var comid = featureData.COMID;
+  if (!watersheds.value.some(e => e.comid === featureData.COMID)) {
+    let yr = parseInt(featureData.YEAR)
+    const year = yr >= 2012 ? "nrsa1314" : yr <= 2005 ? "nrsa0405" : "nrsa0809"
+    var sid = featureData.SITE_ID;
+    var comid = featureData.COMID;
+    let data = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/watersheds/${sid}`);
+    let dd = data.data
+    let ws = L.geoJSON(dd, {
+      style: function () {
+          return {color: "red"};
+        }
+      }).addTo(mymap)
+    ws.on("click", () => {moveToFirst(comid)})
+    let bounds = ws.getBounds()
+    mymap.flyToBounds(bounds)
+    var scrollDiv = document.getElementById("mapid").offsetTop;
+    window.scrollTo({ top: scrollDiv, behavior: 'smooth'});
+    axios.get(`${process.env.VUE_APP_API_URL}/nlcd/compare/${comid}/`)
+      .then((response) => {
+        let comp = response.data.comparable
+        let square = response.data.square_list
+        watersheds.value.unshift({
+          "comid": comid,
+          "info": featureData,
+          "comparable": comp, 
+          "squareList": square,
+          "bounds": bounds,
+          "polygon": ws
+        })
+      })
+  }
+}
 
-  axios.get(`${process.env.VUE_APP_API_URL}/nlcd/compare/${comid}/`)
-    .then((response) => {
-      let comp = response.data.comparable
-      let square = response.data.square_list
-      watersheds.value.unshift({
-        "comid": comid,
-        "info": featureData,
-        "comparable": comp, 
-        "squareList": square})
-    })
+const removeWatershed = async (comid, poly) => {
+  const idx = watersheds.value.findIndex(o => {
+    return o.comid === comid
+  })
+  watersheds.value.splice(idx, 1)
+  mymap.removeLayer(poly)
+}
 
-  let data = await axios.get(`${process.env.VUE_APP_API_URL}/${year}/watersheds/${sid}`);
-  let dd = data.data
-  let ws = L.geoJSON(dd, {
-    style: function () {
-        return {color: "red"};
-      }
-    }).addTo(mymap)
-  ws.on("click", () => {moveToFirst(comid)})
-  let bounds = ws.getBounds()
-  mymap.fitBounds(bounds)
-  var scrollDiv = document.getElementById("mapid").offsetTop;
-  window.scrollTo({ top: scrollDiv, behavior: 'smooth'});
+const zoomBounds = async (bnds) => {
+  mymap.flyToBounds(bnds)
 }
 
 const getPoints = async (annum, color, fill) => {
@@ -206,7 +226,7 @@ const getPoints = async (annum, color, fill) => {
   mymap.fitBounds(poop.getBounds())
 }
 // eslint-disable-next-line no-undef
-defineExpose({ getPoints })
+defineExpose({ getPoints, zoomBounds })
 </script>
 
 <style>
@@ -254,5 +274,8 @@ defineExpose({ getPoints })
   }
   .cards-move {
     transition: transform 1s;
+  }
+  .map-height {
+    height: 500px;
   }
  </style>

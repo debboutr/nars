@@ -4,7 +4,11 @@
       <div class="text-xl text-gray-200 mx-4">
         SITE ID: {{ siteInfo.info.SITE_ID }}
       </div>
-      <button class="bg-gray-200 rounded p-2 mx-2" @click="showInfo = !showInfo">i</button>
+      <div>
+        <button class="bg-gray-200 rounded p-2 mx-2" @click="$emit('zoomBounds', siteInfo.bounds)">zoom</button>
+        <button class="bg-gray-200 rounded p-2 mx-2" @click="$emit('removeWatershed', siteInfo.comid, siteInfo.polygon)">remove</button>
+        <button class="bg-gray-200 rounded p-2 mx-2" @click="showInfo = !showInfo">i</button>
+      </div>
     </div>
     <Transition name="show">
       <div class="bg-gray-600 rounded pb-4" v-show="showInfo">
@@ -26,18 +30,15 @@ defineProps({
   siteInfo: Object,
 })
 const showInfo = ref(true)
-
 </script>
 
 <style>
 .show-enter-active {
   transition: all 0.8s ease-out;
 }
-
 .show-leave-active {
   transition: all 0.2s ease-in;
 }
-
 .show-enter-from,
 .show-leave-to {
   opacity: 0;
