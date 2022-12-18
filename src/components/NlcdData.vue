@@ -59,7 +59,7 @@ function makeRectAttrs(c) {
     return {
         "width": `${c.width}%`,
         "x": `${c.start}%`,
-        "fill": this.categories[c.category].color
+        "fill": categories[c.category].color
     }
 }
 </script>
