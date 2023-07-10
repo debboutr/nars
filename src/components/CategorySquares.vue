@@ -1,8 +1,13 @@
 <template>
   <div v-if="squareList" class="flex justify-between flex-wrap pb-2">
     <template v-for="(square, index) in squareList" :key="index">
-      <button @click="showModal = square" class="nub w-10 h-10 mx-2 mb-4" :style="{ 'background-color': catNames[square]['color'] }">
-        <span id="fade" class="w-full h-8 z-10">{{ catNames[square]['name'] }}</span>
+      <button @click="showModal = square"
+        class="nub w-10 h-10 mx-2 mb-4"
+        :style="{ 'background-color': categories[square]['color'] }"
+        >
+        <span id="fade" class="w-full h-8 z-10">
+          {{ categories[square]['name'] }}
+        </span>
       </button>
     </template>
   </div>
@@ -13,16 +18,16 @@
   </transition>
   </Suspense>
 <!--
---> 
+-->
 </template>
 
 <script setup>
 import { ref } from "vue"
+import { categories } from "@/utils/categories"
 import NlcdChartModal from "@/components/NlcdChartModal.vue"
 // eslint-disable-next-line no-undef
 defineProps({
   squareList: Object,
-  catNames:  Object,
   comid:  String,
 })
 const showModal = ref(false)
